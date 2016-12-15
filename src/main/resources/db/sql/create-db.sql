@@ -1,5 +1,5 @@
-CREATE TABLE users (
-  id         INTEGER PRIMARY KEY,
-  name VARCHAR(30),
-  email  VARCHAR(50)
+CREATE TABLE vehicles (
+  id INTEGER PRIMARY KEY,
+  x  INTEGER,
+  y  INTEGER
 );
