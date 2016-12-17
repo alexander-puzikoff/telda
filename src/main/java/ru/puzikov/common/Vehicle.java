@@ -1,17 +1,22 @@
 package ru.puzikov.common;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
  * Created by SBT-Puzikov-AYU on 28.11.2016.
  */
 
-//@Entity
-//@Table(name = "vehicles")
+@Entity
+@Table(name = "vehicles")
 public class Vehicle {
+    @Id
     private int id;
+    @Column
     private int x;
+    @Column
     private int y;
 
     public int getId() {

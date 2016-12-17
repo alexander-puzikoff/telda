@@ -3,7 +3,8 @@ package ru.puzikov.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.puzikov.dao.MainDAOImpl;
+import ru.puzikov.dao.MainDAO;
+import ru.puzikov.dao.VehicleRepository;
 
 /**
  * Created by APuzikov on 11.12.2016.
@@ -13,11 +14,14 @@ import ru.puzikov.dao.MainDAOImpl;
 public class MainController {
 
     @Autowired
-    private MainDAOImpl repo;
+    private MainDAO repo;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     @RequestMapping("/")
     public String index() {
-        return "hello world!" + repo.getVehicles();
+        return "hello world!" + vehicleRepository.findAll();
     }
 
 }

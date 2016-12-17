@@ -9,7 +9,6 @@ import ru.puzikov.common.Vehicle;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,11 +16,12 @@ import java.util.List;
  * Created by APuzikov on 11.12.2016.
  */
 @Repository
-public class MainDAOImpl {
+public class MainDAOImpl implements MainDAO {
 
     private DataSource dataSource;
     private JdbcTemplate template = null;
 
+    @Override
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -29,10 +29,7 @@ public class MainDAOImpl {
     }
 
 
-    public Vehicle findById(long id) {
-        return null;
-    }
-
+    @Override
     public List<Vehicle> getVehicles() {
         List<Vehicle> vehicles = template.query("SELECT * FROM vehicles", new VehicleMapper());
         return vehicles;

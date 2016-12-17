@@ -1,6 +1,5 @@
 package ru.puzikov.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,13 +7,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
-import ru.puzikov.Executor;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 /**
@@ -22,15 +20,17 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ComponentScan(basePackages = "ru.puzikov")
+@EnableJpaRepositories(
+        basePackages = "ru.puzikov")
 @EnableTransactionManagement
-//@EnableJpaRepositories(basePackageClasses = Executor.class)
 public class JPAConfig {
 
-    @Bean
+
+    @Bean(name = "dataSource")
     public DataSource configureDataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         EmbeddedDatabase db = builder
-                .setType(EmbeddedDatabaseType.HSQL) //.H2 or .DERBY
+                .setType(EmbeddedDatabaseType.HSQL)
                 .addScript("db/sql/create-db.sql")
                 .addScript("db/sql/create-data-db.sql")
                 .setName("telda_db")
@@ -38,16 +38,24 @@ public class JPAConfig {
         return db;
     }
 
-    @Bean
-    @Autowired
-    public LocalSessionFactoryBean getSessionFactory(DataSource dataSource){
-        LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
-        localSessionFactoryBean.setDataSource(dataSource);
-        return localSessionFactoryBean;
+    @Bean(name = "transactionManager")
+    public JpaTransactionManager getTransactionManager() {
+        JpaTransactionManager manager = new JpaTransactionManager();
+        manager.setEntityManagerFactory(entityManagerFactory());
+        return manager;
     }
 
-//?    public PlatformTransactionManager annotationDrivenTransactionManager() {
-//        return new JpaTransactionManager();
-//    }
+
+    @Bean(name = "entityManagerFactory")
+    public EntityManagerFactory entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
+        bean.setDataSource(configureDataSource());
+        bean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        bean.setPackagesToScan("ru.puzikov");
+        bean.afterPropertiesSet();
+        return bean.getObject();
+    }
+
+
 }
 
