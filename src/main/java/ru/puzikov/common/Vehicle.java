@@ -1,9 +1,6 @@
 package ru.puzikov.common;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by SBT-Puzikov-AYU on 28.11.2016.
@@ -13,6 +10,7 @@ import javax.persistence.Table;
 @Table(name = "vehicles")
 public class Vehicle {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
     private int x;

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.puzikov.dao.MainDAO;
 import ru.puzikov.dao.VehicleRepository;
+import ru.puzikov.service.VehicleService;
 
 /**
  * Created by APuzikov on 11.12.2016.
@@ -14,14 +15,11 @@ import ru.puzikov.dao.VehicleRepository;
 public class MainController {
 
     @Autowired
-    private MainDAO repo;
-
-    @Autowired
-    private VehicleRepository vehicleRepository;
+    VehicleService service;
 
     @RequestMapping("/")
     public String index() {
-        return "hello world!" + vehicleRepository.findAll();
+        return "List of all vehicles!<br>" + service.getAllVehicles();
     }
 
 }

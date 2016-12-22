@@ -1,30 +1,27 @@
 package ru.puzikov.config;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.io.IOException;
 
 /**
  * Created by SBT-Puzikov-AYU on 28.11.2016.
  */
 @Configuration
-@ComponentScan(basePackages = "ru.puzikov")
-@EnableJpaRepositories(
-        basePackages = "ru.puzikov")
 @EnableTransactionManagement
-public class JPAConfig {
-
+@ComponentScan(basePackages = "ru.puzikov")
+public class Config {
 
     @Bean(name = "dataSource")
     public DataSource configureDataSource() {
@@ -38,24 +35,23 @@ public class JPAConfig {
         return db;
     }
 
-    @Bean(name = "transactionManager")
-    public JpaTransactionManager getTransactionManager() {
-        JpaTransactionManager manager = new JpaTransactionManager();
-        manager.setEntityManagerFactory(entityManagerFactory());
+
+    @Bean(name  = "transactionManager")
+    @Autowired
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) throws IOException {
+        HibernateTransactionManager manager = new HibernateTransactionManager(sessionFactory);
+        manager.afterPropertiesSet();
         return manager;
     }
 
-
-    @Bean(name = "entityManagerFactory")
-    public EntityManagerFactory entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
-        bean.setDataSource(configureDataSource());
-        bean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        bean.setPackagesToScan("ru.puzikov");
+    @Bean(name = "sessionFactory")
+    @Autowired
+    public SessionFactory getSessionFactory(DataSource dataSource) throws IOException {
+        LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
+        bean.setAnnotatedClasses(ru.puzikov.common.Vehicle.class);
+        bean.setDataSource(dataSource);
         bean.afterPropertiesSet();
         return bean.getObject();
     }
-
-
 }
 
