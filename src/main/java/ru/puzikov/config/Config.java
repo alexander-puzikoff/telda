@@ -1,7 +1,6 @@
 package ru.puzikov.config;
 
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,6 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
@@ -24,7 +22,7 @@ import java.io.IOException;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ru.puzikov")
-public class Config extends WebMvcConfigurerAdapter {
+public class Config {
 
 
     @Bean(name = "dataSource")
@@ -33,7 +31,6 @@ public class Config extends WebMvcConfigurerAdapter {
         EmbeddedDatabase db = builder
                 .setType(EmbeddedDatabaseType.HSQL)
                 .addScript("db/sql/create-db.sql")
-                .addScript("db/sql/create-data-db.sql")
                 .setName("telda_db")
                 .build();
         return db;
@@ -41,19 +38,17 @@ public class Config extends WebMvcConfigurerAdapter {
 
 
     @Bean(name = "transactionManager")
-    @Autowired
-    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) throws IOException {
-        HibernateTransactionManager manager = new HibernateTransactionManager(sessionFactory);
+    public HibernateTransactionManager getTransactionManager() throws IOException {
+        HibernateTransactionManager manager = new HibernateTransactionManager(getSessionFactory());
         manager.afterPropertiesSet();
         return manager;
     }
 
     @Bean(name = "sessionFactory")
-    @Autowired
-    public SessionFactory getSessionFactory(DataSource dataSource) throws IOException {
+    public SessionFactory getSessionFactory() throws IOException {
         LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
         bean.setAnnotatedClasses(ru.puzikov.common.Vehicle.class);
-        bean.setDataSource(dataSource);
+        bean.setDataSource(configureDataSource());
         bean.afterPropertiesSet();
         return bean.getObject();
     }
