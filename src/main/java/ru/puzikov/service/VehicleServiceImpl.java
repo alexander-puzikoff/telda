@@ -17,8 +17,8 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public void saveVehicle(Vehicle vehicleToSave) {
-        vehicleDAO.saveVehicle(vehicleToSave);
+    public void saveOrUpdateVehicle(Vehicle vehicleToSave) {
+        vehicleDAO.saveOrUpdateVehicle(vehicleToSave);
     }
 
     @Override

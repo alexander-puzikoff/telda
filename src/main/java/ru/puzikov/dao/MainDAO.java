@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface MainDAO {
 
-    List<Vehicle> getAllVehicles();
+    List getAllVehicles();
 
-    void saveVehicle(Vehicle vehicleToSave);
+    void saveOrUpdateVehicle(Vehicle vehicleToSave);
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Vehicles</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1> Add new vehicle: </h1>
+
+<div id="vehicleForm">
+    <div class="inputdiv"><span>Vehicle id: </span><input name="id" type="number"/></div>
+    <div class="inputdiv"><span>Vehicle x: </span><input name="x" type="number"/></div>
+    <div class="inputdiv"><span>Vehicle y: </span><input name="y" type="number"/></div>
+    <div>
+        <button name="save" type="button" onclick="saveVehicle()">Save</button>
+    </div>
+</div>
+</body>
+<footer>
+    <style type="text/css">
+        div.inputdiv {
+            padding: 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        function saveVehicle() {
+            var vehicle = {
+                id: $(".inputdiv input[name='id']").val(),
+                x: $(".inputdiv input[name='x']").val(),
+                y: $(".inputdiv input[name='y']").val()
+            };
+            $.ajax({
+                url: '/rest/vehicle',
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify(vehicle)
+            });
+        }
+    </script>
+    <script type="application/javascript" src="scripts/jquery-3.1.1.min.js"></script>
+</footer>
+</html>

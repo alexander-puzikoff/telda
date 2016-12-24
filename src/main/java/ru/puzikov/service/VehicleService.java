@@ -10,7 +10,7 @@ import java.util.List;
 public interface VehicleService {
 
 
-    void saveVehicle(Vehicle vehicleToSave);
+    void saveOrUpdateVehicle(Vehicle vehicleToSave);
 
     List<Vehicle> getAllVehicles();
 }

@@ -11,6 +11,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -21,7 +24,8 @@ import java.io.IOException;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ru.puzikov")
-public class Config {
+public class Config extends WebMvcConfigurerAdapter {
+
 
     @Bean(name = "dataSource")
     public DataSource configureDataSource() {
@@ -36,7 +40,7 @@ public class Config {
     }
 
 
-    @Bean(name  = "transactionManager")
+    @Bean(name = "transactionManager")
     @Autowired
     public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) throws IOException {
         HibernateTransactionManager manager = new HibernateTransactionManager(sessionFactory);
@@ -52,6 +56,13 @@ public class Config {
         bean.setDataSource(dataSource);
         bean.afterPropertiesSet();
         return bean.getObject();
+    }
+
+    @Bean
+    ViewResolver getViewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setSuffix(".html");
+        return resolver;
     }
 }
 

@@ -16,25 +16,19 @@ import java.util.List;
 @Transactional
 public class MainDAOImpl implements MainDAO {
 
-    @Resource(name="sessionFactory")
+    @Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
-
 
 
     @Transactional(readOnly = true)
     @Override
     public List<Vehicle> getAllVehicles() {
-        sessionFactory.openSession();
-        List<Vehicle> vehicles = sessionFactory.getCurrentSession().createQuery("FROM Vehicle V").list();
-        sessionFactory.close();
-        return vehicles;
+        return sessionFactory.getCurrentSession().createQuery("FROM Vehicle V").list();
     }
 
     @Override
-    public void saveVehicle(Vehicle vehicleToSave) {
-        sessionFactory.openSession();
+    public void saveOrUpdateVehicle(Vehicle vehicleToSave) {
         sessionFactory.getCurrentSession().saveOrUpdate(vehicleToSave);
-        sessionFactory.close();
     }
 
 }
