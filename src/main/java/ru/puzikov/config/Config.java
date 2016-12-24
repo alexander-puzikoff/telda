@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by SBT-Puzikov-AYU on 28.11.2016.
@@ -48,6 +49,7 @@ public class Config {
     public SessionFactory getSessionFactory() throws IOException {
         LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
         bean.setAnnotatedClasses(ru.puzikov.common.Vehicle.class);
+        bean.setHibernateProperties(getHibernateProps());
         bean.setDataSource(configureDataSource());
         bean.afterPropertiesSet();
         return bean.getObject();
@@ -58,6 +60,12 @@ public class Config {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setSuffix(".html");
         return resolver;
+    }
+
+    private Properties getHibernateProps() {
+        Properties hibernateProperties = new Properties();
+        hibernateProperties.setProperty("hibernate.c3p0.max_statements", "20");
+        return hibernateProperties;
     }
 }
 
