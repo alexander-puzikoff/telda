@@ -1,6 +1,7 @@
 package ru.puzikov.dao;
 
 import org.hibernate.SessionFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.puzikov.common.Vehicle;
@@ -29,6 +30,14 @@ public class MainDAOImpl implements MainDAO {
     @Override
     public void saveOrUpdateVehicle(Vehicle vehicleToSave) {
         sessionFactory.getCurrentSession().saveOrUpdate(vehicleToSave);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(value = "vehicles")
+    @Override
+    public List<Vehicle> getVehiclesInArea(int x1, int x2, int y1, int y2) {
+        String query = "select v FROM Vehicle V where v.x BETWEEN ( " + x1 + ", " + x2 + ") and v.y BETWEEN ( " + y1 + ", " + y2 + " )";
+        return sessionFactory.getCurrentSession().createSQLQuery(query).list();
     }
 
 }

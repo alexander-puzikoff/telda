@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.puzikov.dao.MainDAO;
 
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -18,6 +19,7 @@ public class MainDAOTest {
 
     @Test
     public void contextLoads() {
+        Semaphore writeSemaphore = new Semaphore(10);
         Objects.requireNonNull(mainDAO);
     }
 

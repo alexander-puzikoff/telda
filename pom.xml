@@ -14,6 +14,7 @@
         <start-class>ru.puzikov.Executor</start-class>
         <hsqldb.version>LATEST</hsqldb.version>
         <java.version>1.8</java.version>
+        <ehcache.version>2.10.2.2.21</ehcache.version>
     </properties>
 
     <name>NPP Telda test project</name>
@@ -34,9 +35,19 @@
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.sf.ehcache/ehcache -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
