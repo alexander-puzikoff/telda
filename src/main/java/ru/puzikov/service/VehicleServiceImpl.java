@@ -1,6 +1,7 @@
 package ru.puzikov.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import ru.puzikov.common.Vehicle;
 import ru.puzikov.dao.MainDAO;
@@ -19,6 +20,11 @@ public class VehicleServiceImpl implements VehicleService {
     private final Semaphore writeSemaphore = new Semaphore(PERMITS);
 
     @Override
+    public List<Vehicle> getAllVehiclesInArea(int x1, int x2, int y1, int y2) {
+        return vehicleDAO.getVehiclesInArea(x1, x2, y1, y2);
+    }
+
+    @Override
     public void saveOrUpdateVehicle(Vehicle vehicleToSave) {
         try {
             writeSemaphore.acquire();
@@ -28,6 +34,12 @@ public class VehicleServiceImpl implements VehicleService {
         } catch (InterruptedException e) {
             // e.printStackTrace();
         }
+    }
+
+    @Override
+    @CacheEvict(value = "vehicles")
+    public void updateCoordinates(int x1, int x2, int y1, int y2) {
+        vehicleDAO.getVehiclesInArea(x1, x2, y1, y2); // empty cache
     }
 
     @Override

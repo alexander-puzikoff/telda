@@ -12,7 +12,7 @@ import ru.puzikov.service.VehicleService;
  */
 
 @Controller(value = "/")
-public class MainController {
+public class MainVehicleController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomePage() {
