@@ -36,8 +36,14 @@ public class MainDAOImpl implements MainDAO {
     @Cacheable(value = "vehicles")
     @Override
     public List<Vehicle> getVehiclesInArea(int x1, int x2, int y1, int y2) {
-        String query = "select v FROM Vehicle V where v.x BETWEEN ( " + x1 + ", " + x2 + ") and v.y BETWEEN ( " + y1 + ", " + y2 + " )";
-        return sessionFactory.getCurrentSession().createSQLQuery(query).list();
+        String query = "FROM Vehicle v where v.x BETWEEN :x1 and :x2  and v.y BETWEEN :y1 AND :y2 ";
+        return sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("x1",x1)
+                .setParameter("x2",x2)
+                .setParameter("y1",y1)
+                .setParameter("y2",y2)
+                .list();
+
     }
 
 }
