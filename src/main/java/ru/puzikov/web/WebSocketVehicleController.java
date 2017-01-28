@@ -28,44 +28,44 @@ public class WebSocketVehicleController {
     }
 
     private static class Coordinates {
-        private String x1;
-        private String x2;
-        private String y1;
-        private String y2;
+        private int x1;
+        private int x2;
+        private int y1;
+        private int y2;
         @JsonCreator
         public Coordinates() {
         }
 
-        public void setX1(String x1) {
+        public void setX1(int x1) {
             this.x1 = x1;
         }
 
-        public void setX2(String x2) {
+        public void setX2(int x2) {
             this.x2 = x2;
         }
 
-        public void setY1(String y1) {
+        public void setY1(int y1) {
             this.y1 = y1;
         }
 
-        public void setY2(String y2) {
+        public void setY2(int y2) {
             this.y2 = y2;
         }
 
-        public int getX1() {
-            return Integer.valueOf(x1);
+        int getX1() {
+            return x1;
         }
 
-        public int getX2() {
-            return Integer.valueOf(x2);
+        int getX2() {
+            return x2;
         }
 
-        public int getY1() {
-            return Integer.valueOf(y1);
+        int getY1() {
+            return y1;
         }
 
-        public int getY2() {
-            return Integer.valueOf(y2);
+        int getY2() {
+            return y2;
         }
 
     }

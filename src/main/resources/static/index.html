@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h1> Add new vehicle: </h1>
+<h2> Add new vehicle: </h2>
 
 <div id="vehicleForm">
     <div class="inputdiv"><span>Vehicle id: </span><input name="id" type="number"/></div>
@@ -15,24 +15,56 @@
         <button name="save" type="button" onclick="saveVehicle()">Save</button>
     </div>
 </div>
+<h2> Update area: </h2>
+<div id="coordinatesForm">
+    <div class="inputdiv"><span>x min: </span><input name="xi" type="number"/></div>
+    <div class="inputdiv"><span>x max: </span><input name="xa" type="number"/></div>
+    <div class="inputdiv"><span>y min: </span><input name="yi" type="number"/></div>
+    <div class="inputdiv"><span>y max: </span><input name="ya" type="number"/></div>
+    <div>
+        <button name="save" type="button" onclick="updateCoordinates()">Update area</button>
+    </div>
+</div>
 </body>
 <footer>
     <style type="text/css">
         div.inputdiv {
-
             padding: 5px;
+            padding-left: 15px;
+        }
+
+        div.coordinatesForm {
+            padding-top: 100px;
+            padding-left: 20px;
         }
     </style>
     <script type="text/javascript">
+        var stompClient = null;
+        connect();
+        function updateCoordinates() {
+            if (!stompClient) {
+                connect();
+            }
+            var coordinates = {
+                x1: parseInt($(".inputdiv input[name='xi']").val()),
+                x2: parseInt($(".inputdiv input[name='xa']").val()),
+                y1: parseInt($(".inputdiv input[name='yi']").val()),
+                y2: parseInt($(".inputdiv input[name='ya']").val())
+            };
+            if (coordinates.x1 > coordinates.x2 || coordinates.y1 > coordinates.y2) {
+                alert("Invalid coordinates input");
+            } else {
+                stompClient.send("/app/coordinates", {}, JSON.stringify(coordinates));
+            }
+        }
 
         function connect() {
             var socket = new SockJS('/coordinates');
             stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
-//                setConnected(true);
+            stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/result/vehicles', function(greeting){
-  //                  showGreeting(JSON.parse(greeting.body).content);
+                stompClient.subscribe('/result/vehicles', function (greeting) {
+                    alert(greeting);
                 });
             });
         }
