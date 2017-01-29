@@ -20,8 +20,11 @@ public class VehicleServiceImpl implements VehicleService {
     private final Semaphore writeSemaphore = new Semaphore(PERMITS);
 
     @Override
-    public List<Vehicle> getAllVehiclesInArea(int x1, int x2, int y1, int y2) {
-        return vehicleDAO.getVehiclesInArea(x1, x2, y1, y2);
+    public List<Vehicle> getAllVehiclesInArea(int xmin, int xmax, int ymin, int ymax) {
+        if(xmin > xmax || ymin > ymax){
+            throw new IllegalArgumentException("Invalid coordinates");
+        }
+        return vehicleDAO.getVehiclesInArea(xmin, xmax, ymin, ymax);
     }
 
     @Override

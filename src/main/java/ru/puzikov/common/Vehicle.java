@@ -59,10 +59,7 @@ public class Vehicle {
         if (o == null || getClass() != o.getClass()) return false;
 
         Vehicle vehicle = (Vehicle) o;
-
-        if (id != vehicle.id) return false;
-        if (x != vehicle.x) return false;
-        return y == vehicle.y;
+        return id != vehicle.id;
 
     }
 
