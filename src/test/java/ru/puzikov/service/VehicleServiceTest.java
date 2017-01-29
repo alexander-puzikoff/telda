@@ -1,16 +1,13 @@
 package ru.puzikov.service;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.puzikov.common.Vehicle;
 import ru.puzikov.config.MainConfig;
@@ -32,7 +29,6 @@ public class VehicleServiceTest {
     static class TestConfig {
 
         @Bean(name = "ThreadPoolTaskExecutor")
-        @Scope(value = "prototype")
         ExecutorService getExecutorService() {
             return Executors.newFixedThreadPool(15);
         }
@@ -41,7 +37,6 @@ public class VehicleServiceTest {
     @Autowired
     VehicleService service;
     @Autowired
-    @Qualifier(value = "ThreadPoolTaskExecutor")
     ExecutorService executor;
 
     @Test
@@ -102,4 +97,27 @@ public class VehicleServiceTest {
         List<Vehicle> allVehiclesInArea = service.getAllVehiclesInArea(100, 200, 100, 400);
         Assert.assertThat(allVehiclesInArea.size(), is(0));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidAreaInputForX() {
+        service.getAllVehiclesInArea(100, 12, 3201, 4444);
+        Assert.fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidAreaInputForY() {
+        service.getAllVehiclesInArea(10, 12, 31201, 4444);
+        Assert.fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidAreaInputForBothXandY() {
+        service.getAllVehiclesInArea(101, 12, 31201, 4444);
+        Assert.fail();
+    }
+
+    public void validAreaInput() {
+        Assert.assertNotNull(service.getAllVehiclesInArea(10, 12, 301, 444));
+    }
+
 }

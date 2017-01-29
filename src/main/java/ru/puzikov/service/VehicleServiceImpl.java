@@ -40,7 +40,6 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    @CacheEvict(value = "vehicles")
     public void updateCoordinates(int x1, int x2, int y1, int y2) {
         vehicleDAO.getVehiclesInArea(x1, x2, y1, y2); // empty cache
     }
