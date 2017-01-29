@@ -52,4 +52,25 @@ public class Vehicle {
                 ", y=" + y +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vehicle vehicle = (Vehicle) o;
+
+        if (id != vehicle.id) return false;
+        if (x != vehicle.x) return false;
+        return y == vehicle.y;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + x;
+        result = 31 * result + y;
+        return result;
+    }
 }

@@ -1,6 +1,7 @@
-package ru.puzikov;
+package ru.puzikov.service;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.puzikov.common.Vehicle;
 import ru.puzikov.config.MainConfig;
-import ru.puzikov.service.VehicleService;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.core.Is.is;
@@ -47,10 +44,9 @@ public class VehicleServiceTest {
     @Qualifier(value = "ThreadPoolTaskExecutor")
     ExecutorService executor;
 
-    AtomicInteger tenCummulative = new AtomicInteger();
-
     @Test
     public void testMaxInputsUsingService() throws InterruptedException {
+        AtomicInteger tenCummulative = new AtomicInteger();
         Objects.requireNonNull(service);
         Objects.requireNonNull(executor);
         int THREAD_COUNT = 15;
@@ -84,5 +80,26 @@ public class VehicleServiceTest {
         Assert.assertThat(tenCummulative.get(), is(10));
     }
 
+    @Test
+    public void vehicleInAreaTest() {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(432);
+        vehicle.setX(15);
+        vehicle.setY(20);
+        service.saveOrUpdateVehicle(vehicle);
+        List<Vehicle> allVehiclesInArea = service.getAllVehiclesInArea(10, 20, 10, 40);
+        Assert.assertThat(allVehiclesInArea.size(), is(1));
+        Assert.assertThat(allVehiclesInArea.get(0), is(vehicle));
+    }
 
+    @Test
+    public void vehicleNotInAreaTest() {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(123);
+        vehicle.setX(4);
+        vehicle.setY(2 / 3);
+        service.saveOrUpdateVehicle(vehicle);
+        List<Vehicle> allVehiclesInArea = service.getAllVehiclesInArea(100, 200, 100, 400);
+        Assert.assertThat(allVehiclesInArea.size(), is(0));
+    }
 }
